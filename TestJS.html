@@ -1,0 +1,223 @@
+<html lang="en">
+
+<head>
+
+    <title>DOM events</title>
+
+    <style>
+        .buttons{
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 330px;
+        }
+
+        .buttons input{
+            background: #4169E1;
+            height: 30px;
+            color: #f8fbfe;
+            width: 120px;
+        }
+        body{
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .image{
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    var users = [
+        {id: 0, name: "Ibragim", login: "admin", password: "qwerty"}
+    ];
+    var counter = 0;
+    var currentUserId;
+    var successLogin = false;
+    while(true) {
+        let choice1 = parseInt(prompt(
+            "выбери 1 - чтобы зарегистрироваться\n" +
+            "выбери 2 - чтобы войти \n" +
+            "выбери 3 - чтобы увидеть вошедшего пользователя\n" +
+            "выбери 4 - чтобы поменять свой пароль\n" +
+            "выбери 5 - чтобы выйти из аккаунта\n" +
+            "выбери 6 - чтобы выйти из меню"
+        ))
+        if (choice1 === 1) {
+            let success = false;
+            let successRegistration = false;
+            let isInArray = false;
+            let newUserName;
+            let newUserLogin;
+            let newUserPassword;
+            let newUserPassword1;
+
+            if (successLogin === true) {
+                alert("Вы уже вошли в аккаунт, для повторной регистрации завершите текущую сессию")
+            } else {
+                newUserName = prompt("Введите имя нового пользователя")
+                if (!newUserName === false) {
+                    success = true;
+                } else {
+                    alert("Имя пользователя не может быть пустым")
+                }
+
+                if (success === true) {
+                    newUserLogin = prompt("Введите логин нового пользователя")
+                    if (!newUserLogin === false) {
+                        for (let user of users) {
+                            if (user.login === newUserLogin) {
+                                isInArray = true;
+                                alert("Пользователь с таким логином уже существует")
+                            }
+                        }
+                    } else {
+                        alert("логин пользователя не может быть пустым")
+                        success = false;
+                    }
+                }
+
+                if (isInArray === false && success === true) {
+                    newUserPassword = prompt("Введите пароль нового пользователя")
+                    if (newUserPassword === false) {
+                        success = false;
+                        alert("Пароль пользователя не может быть пустым")
+                    }
+
+                    if (success === true) {
+                        newUserPassword1 = prompt("Подтвердите пароль нового пользователя")
+                    }
+
+
+                    if (newUserPassword === newUserPassword1) {
+                        successRegistration = true;
+
+                    } else {
+                        alert("Пароли не совпадают, регистрацию необходимо повторить")
+                    }
+                }
+                if (successRegistration === true) {
+                    counter++;
+                    let NewUser = {};
+                    NewUser.id = counter;
+                    NewUser.name = newUserName;
+                    NewUser.login = newUserPassword;
+                    NewUser.password = newUserPassword;
+                    users.push(NewUser)
+                    alert("Регистрация прошла успешно")
+                }
+
+                newUserName = "";
+                newUserLogin = "";
+                newUserPassword = "";
+                newUserPassword1 = "";
+            }
+        }
+
+        if (choice1 === 2) {
+            if (successLogin === true) {
+                alert("Вы уже вошли в аккаунт, для повторной регистрации завершите текущую сессию")
+            } else {
+
+                let success = false;
+                let UserIsInArray = false;
+
+                let userLogin;
+                let userPassword;
+
+                userLogin = prompt("Введите логин пользователя")
+                if (!userLogin === false) {
+                    success = true;
+                } else {
+                    alert("Входные данные не могут быть пустыми")
+                }
+
+                if (success === true) {
+                    userPassword = prompt("Введите пароль пользователя")
+                    if (!userPassword === false) {
+                        success = true;
+                    } else {
+                        alert("Входные данные не могут быть пустыми")
+                    }
+                }
+                if (success === true) {
+                    for (let user of users) {
+                        if (user.login === userLogin && user.password === userPassword) {
+                            UserIsInArray = true;
+                            successLogin = true;
+                            currentUserId = user.id
+                        }
+                    }
+                    if (successLogin === true) {
+                        alert("Добро пожаловать!")
+
+                    }
+                    else {
+                        alert("Пользователь не найден")
+                    }
+                }
+            }
+        }
+
+        if(choice1 === 3){
+            if(successLogin === true){
+                for(let user of users){
+                    if(user.id === currentUserId){
+                        alert("Данные пользователя:\n" + "ID: " + user.id + "\n" + "NAME: " + user.name + "\n" + "LOGIN: " + user.login + "\n" + "PASSWORD: " + user.password)
+                        break;
+                    }
+                }
+            }
+            else{
+                alert("Для проверки информации пользователя войдите в акканут")
+            }
+        }
+
+        if(choice1 === 4) {
+            if (successLogin === true) {
+                for(let user of users) {
+                    if (user.id === currentUserId) {
+                        let NewPassword = prompt("Введите новый пароль")
+                        let NewPassword1 = prompt("Подтвредите новый пароль")
+                        if (!NewPassword===false && NewPassword === NewPassword1){
+                            user.password = NewPassword;
+                            alert("пароль успешно изменен")
+                        }
+                        else{
+                            alert("пароль не может быть пустым")
+                        }
+                        NewPassword = "";
+                        NewPassword1 = "";
+                    }
+                }
+            }
+            else {
+                alert("Для изменения информации пользователя войдите в акканут")
+            }
+        }
+
+
+
+        if (choice1 === 5) {
+            alert("Выход из аккаунта прошел успешно")
+            successLogin = false;
+            currentUserId = null;
+        }
+
+
+        if (choice1 === 6) {
+            break;
+        }
+
+    }
+
+
+</script>
+</body>
+
+</html>
